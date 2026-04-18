@@ -30,6 +30,8 @@ CORS(
         "https://music-recommender-app.vercel.app",
         "http://localhost:5173",
         "http://192.168.29.8:5173",
+        "https://amplecen.com",
+        "https://groove.amplecen.com",
     ],
     supports_credentials=True,
 )
@@ -128,6 +130,11 @@ def get_songs():
 
 # Route to fetch songs by genre
 from flask import request, url_for
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok", "message": "Backend API is running"})
+
 
 
 @app.route("/songs/<genre>", methods=["GET"])

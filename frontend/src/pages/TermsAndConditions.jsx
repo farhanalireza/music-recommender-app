@@ -1,10 +1,13 @@
+// Force cache invalidation
 import React from 'react';
 import { ArrowLeft, Shield, Music, AlertTriangle, Headphones } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const TermsAndConditions = ({ onBack }) => {
     const navigate = useNavigate();
-    scrollTo(0, 0);
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">

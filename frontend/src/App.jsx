@@ -1,3 +1,4 @@
+// Force cache invalidation
 // App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -28,7 +29,7 @@ import PlaylistPage from './pages/PlaylistPage';
 import TrackPage from './pages/TrackPage';
 import ChatPage from './pages/ChatPage';
 import LocallySavedSongs from './Components/LocallySavedSongs';
-// import PrivacyPolicy from './pages/PrivacyPolicy';
+import PolicyDoc from './pages/PolicyDoc';
 import TermsAndConditions from './pages/TermsAndConditions';
 
 const App = () => {
@@ -74,7 +75,7 @@ const App = () => {
                 <Route path="/feedback" element={<FeedbackPage />} />
                 <Route path='redirect' element={<Redirect />} />
                 <Route path='/terms' element={<TermsAndConditions />} />
-                {/* <Route path='/privacy' element={<PrivacyPolicy />} /> */}
+                <Route path='/privacy' element={<PolicyDoc />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
 

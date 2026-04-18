@@ -1,9 +1,12 @@
+// Force cache invalidation
 // src/pages/CreditsPage.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function CreditsPage() {
-      window.scrollTo(0, 0)
+      React.useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
