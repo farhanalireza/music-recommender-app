@@ -7,8 +7,10 @@ import React, {
     useCallback,
 } from "react";
 
+import { API_BASE_URL } from "../lib/apiClient";
+
 const PlayerContext = createContext();
-const API_ME_ENDPOINT = "https://music-recommender-api.onrender.com/me";
+const API_ME_ENDPOINT = `${API_BASE_URL}/me`;
 const DEBUG_MODE = true;
 
 export const PlayerProvider = ({ children }) => {

@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import SpotifyDevices from './SpotifyDevices';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slider from '@mui/material/Slider';
+import { API_BASE_URL } from '../lib/apiClient';
 
 import {
     Play,
@@ -53,7 +54,7 @@ export default function SpotifyPlayer() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const res = await fetch('https://music-recommender-api.onrender.com/me', {
+                const res = await fetch(`${API_BASE_URL}/me`, {
                     credentials: 'include',
                 });
                 setIsAuthenticated(res.ok);
@@ -82,7 +83,7 @@ export default function SpotifyPlayer() {
             const localPlayer = new window.Spotify.Player({
                 name: 'GrooveEstrella Web Player',
                 getOAuthToken: (cb) => {
-                    fetch('https://music-recommender-api.onrender.com/refresh_access_token', {
+                    fetch(`${API_BASE_URL}/refresh_access_token`, {
                         credentials: 'include',
                     })
                         .then((res) => res.json())
@@ -137,7 +138,7 @@ export default function SpotifyPlayer() {
         if (positionMs > 0) payload.position_ms = positionMs;
 
         try {
-            await fetch('https://music-recommender-api.onrender.com/player/play', {
+            await fetch(`${API_BASE_URL}/player/play`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -184,7 +185,7 @@ export default function SpotifyPlayer() {
 
 const toggleShuffle = async () => {
   try {
-    const res = await fetch('https://music-recommender-api.onrender.com/player/shuffle', {
+    const res = await fetch(`${API_BASE_URL}/player/shuffle`, {
       method: 'PUT',
       credentials: 'include',
       headers: { "Content-Type": "application/json" },
@@ -211,7 +212,7 @@ const cycleRepeatMode = async () => {
   const nextMode = repeatMode === 'off' ? 'context' : repeatMode === 'context' ? 'track' : 'off';
 
   try {
-    const res = await fetch('https://music-recommender-api.onrender.com/player/repeat', {
+    const res = await fetch(`${API_BASE_URL}/player/repeat`, {
       method: 'PUT',
       credentials: 'include',
       headers: { "Content-Type": "application/json" },
@@ -240,7 +241,7 @@ const cycleRepeatMode = async () => {
     useEffect(() => {
         const fetchQueue = async () => {
             try {
-                const res = await fetch(`https://music-recommender-api.onrender.com/player/queue`, {
+                const res = await fetch(`${API_BASE_URL}/player/queue`, {
                     credentials: 'include',
                 });
                 const data = await res.json();
@@ -260,7 +261,7 @@ const cycleRepeatMode = async () => {
 
     const addToQueue = async (uri) => {
         try {
-            const res = await fetch(`https://music-recommender-api.onrender.com/player/queue`, {
+            const res = await fetch(`${API_BASE_URL}/player/queue`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { "Content-Type": "application/json" },
@@ -287,7 +288,7 @@ const cycleRepeatMode = async () => {
 
         const fetchPlayerState = async () => {
             try {
-                const res = await fetch('https://music-recommender-api.onrender.com/player/state', {
+                const res = await fetch(`${API_BASE_URL}/player/state`, {
                     credentials: 'include',
                 });
                 if (res.ok) {

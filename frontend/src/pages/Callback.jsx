@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
 import { Loader } from 'lucide-react';
+import { API_BASE_URL } from '../lib/apiClient';
 
 export default function Callback() {
   const location = useLocation();
@@ -22,7 +23,7 @@ export default function Callback() {
     // console.log("🎟 Code received:", code);
 
     // Step 1: Exchange code → backend (sets session cookie)
-    fetch(`https://music-recommender-api.onrender.com/callback?code=${encodeURIComponent(code)}`, {
+    fetch(`${API_BASE_URL}/callback?code=${encodeURIComponent(code)}`, {
       method: "GET",
       credentials: "include",
     })
@@ -34,7 +35,7 @@ export default function Callback() {
         // console.log("✅ Callback success, verifying session...");
 
         // Step 2: Verify session by calling /me (requires cookie)
-        return fetch(`https://music-recommender-api.onrender.com/me`, {
+        return fetch(`${API_BASE_URL}/me`, {
           method: "GET",
           credentials: "include",
         });

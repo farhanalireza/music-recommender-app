@@ -90,7 +90,7 @@ export const TrackCard = ({
             whileInView={{ opacity: 1, translateY: 0, y: 0 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="relative w-48 sm:w-84 bg-gradient-to-br from-gray-900/80 to-black/10 backdrop-blur-xl border border-white/80 rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/10 transition-all duration-500"
+            className="relative w-48 sm:w-84 bg-gradient-to-br from-gray-900/80 to-black/10 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/10 transition-all duration-500"
         >
             {/* Image */}
             <div className="relative overflow-hidden">

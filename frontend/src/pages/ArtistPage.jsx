@@ -11,22 +11,24 @@ import { AlbumCard } from "../Components/CardComponents/AlbumsCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { ArtistTrackCard } from "../Components/CardComponents/SmallTracksCard";
 import { ShareArtistComponent } from "../Components/ArtistShareComponent";
-
 export default function ArtistPage() {
     const { id } = useParams();
     const [token, setToken] = useState("");
     const [artist, setArtist] = useState(null);
     const [topTracks, setTopTracks] = useState([]);
     const [albums, setAlbums] = useState([]);
-    // const [relatedArtists, setRelatedArtists] = useState([]);
     const [saved, setSaved] = useState(false);
+    const [error, setError] = useState(null);
+    const [showWakingUpMessage, setShowWakingUpMessage] = useState(false);
     const { showPlayer } = usePlayer();
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        const timer = setTimeout(() => {
+            setShowWakingUpMessage(true);
+        }, 1500);
+        return () => clearTimeout(timer);
     }, []);
-
-    // Check localStorage on mount
     useEffect(() => {
         if (!artist) return;
 
@@ -67,54 +69,78 @@ export default function ArtistPage() {
 
     useEffect(() => {
         async function fetchData() {
-            const t = await getSpotifyToken();
-            setToken(t);
+            try {
+                setError(null);
+                const t = await getSpotifyToken();
+                if (!t) throw new Error("Failed to retrieve Spotify token");
+                setToken(t);
 
-            const [artistRes, topTracksRes, albumsRes] = await Promise.all([
-                axios.get(`https://api.spotify.com/v1/artists/${id}`, {
-                    headers: { Authorization: `Bearer ${t}` },
-                }),
-                axios.get(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`, {
-                    headers: { Authorization: `Bearer ${t}` },
-                }),
-                axios.get(`https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single&market=US`, {
-                    headers: { Authorization: `Bearer ${t}` },
-                }),
-                // axios.get(`https://api.spotify.com/v1/artists/${id}/related-artists`, {
-                //     headers: { Authorization: `Bearer ${t}` },
-                // }),
-            ]);
+                const [artistRes, topTracksRes, albumsRes] = await Promise.all([
+                    axios.get(`https://api.spotify.com/v1/artists/${id}`, {
+                        headers: { Authorization: `Bearer ${t}` },
+                    }),
+                    axios.get(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`, {
+                        headers: { Authorization: `Bearer ${t}` },
+                    }),
+                    axios.get(`https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single&market=US`, {
+                        headers: { Authorization: `Bearer ${t}` },
+                    }),
+                ]);
 
-            setArtist(artistRes.data);
-            setTopTracks(topTracksRes.data.tracks);
-            console.log(artistRes.data);
-            document.title = `${artistRes.data.name} | GrooveEstrella`;
+                setArtist(artistRes.data);
+                setTopTracks(topTracksRes.data.tracks);
+                console.log(artistRes.data);
+                document.title = `${artistRes.data.name} | GrooveEstrella`;
 
-
-            const uniqueAlbums = [];
-            const seen = new Set();
-            for (const album of albumsRes.data.items) {
-                if (!seen.has(album.name)) {
-                    uniqueAlbums.push(album);
-                    seen.add(album.name);
+                const uniqueAlbums = [];
+                const seen = new Set();
+                for (const album of albumsRes.data.items) {
+                    if (!seen.has(album.name)) {
+                        uniqueAlbums.push(album);
+                        seen.add(album.name);
+                    }
                 }
-            }
-            setAlbums(uniqueAlbums.slice(0, 12));
-            // setRelatedArtists(relatedRes.artists);
+                setAlbums(uniqueAlbums.slice(0, 12));
 
-            // Check if artist is saved
-            const savedArtists = JSON.parse(localStorage.getItem("savedArtists")) || [];
-            setSaved(savedArtists.some(a => a.id === artistRes.data.id));
+                // Check if artist is saved
+                const savedArtists = JSON.parse(localStorage.getItem("savedArtists")) || [];
+                setSaved(savedArtists.some(a => a.id === artistRes.data.id));
+            } catch (err) {
+                console.error("Error fetching artist data:", err);
+                setError(err);
+            }
         }
 
         fetchData();
     }, [id]);
 
 
-    if (!artist) return <div className="flex items-center justify-center min-h-screen bg-black text-white">
-        <Loader className="animate-spin w-8 h-8 mr-3" />
-        <span className="text-lg">Loading the Artist Data...</span>
-    </div>;
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Failed to Load Content</h2>
+            <p className="text-gray-400 mb-6 text-center max-w-md">
+                We couldn't connect to the server. Please check your internet connection or try again later.
+            </p>
+            <button
+                onClick={() => window.location.reload()}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full transition duration-300 cursor-pointer"
+            >
+                Retry
+            </button>
+        </div>
+    );
+
+    if (!artist) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+            <Loader className="animate-spin w-8 h-8 mb-4 text-purple-500" />
+            <span className="text-lg font-medium">Loading Artist Data...</span>
+            {showWakingUpMessage && (
+                <span className="text-sm text-gray-400 mt-2 animate-pulse text-center max-w-xs">
+                    Waking up the backend api (this may take up to a minute)...
+                </span>
+            )}
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-black p-6 text-white">

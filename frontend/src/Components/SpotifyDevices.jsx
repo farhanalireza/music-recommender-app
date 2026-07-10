@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Smartphone, MonitorSmartphone, Music, Expand, ChevronUp, ChevronDown } from 'lucide-react';
+import { API_BASE_URL } from '../lib/apiClient';
 
 export default function SpotifyDevices({ isPremium }) {
     const [devices, setDevices] = useState([]);
@@ -7,7 +8,7 @@ export default function SpotifyDevices({ isPremium }) {
 
     const fetchDevices = async () => {
         try {
-            const res = await fetch('https://music-recommender-api.onrender.com/player/devices', {
+            const res = await fetch(`${API_BASE_URL}/player/devices`, {
                 credentials: 'include',
             });
             if (res.ok) {
@@ -23,7 +24,7 @@ export default function SpotifyDevices({ isPremium }) {
         try {
             console.log(deviceId);
 
-            const res = await fetch('https://music-recommender-api.onrender.com/player/transfer', {
+            const res = await fetch(`${API_BASE_URL}/player/transfer`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {

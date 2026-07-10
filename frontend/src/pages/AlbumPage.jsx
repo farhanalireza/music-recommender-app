@@ -19,11 +19,17 @@ export default function AlbumPage() {
     const [album, setAlbum] = useState(null);
     const [tracks, setTracks] = useState([]);
     const [saved, setSaved] = useState(false);
+    const [error, setError] = useState(null);
+    const [showWakingUpMessage, setShowWakingUpMessage] = useState(false);
     const { showPlayer } = usePlayer();
 
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        const timer = setTimeout(() => {
+            setShowWakingUpMessage(true);
+        }, 1500);
+        return () => clearTimeout(timer);
     }, []);
     // Check localStorage save on mount & album load
     useEffect(() => {
@@ -57,9 +63,11 @@ export default function AlbumPage() {
     // Fetch album info & tracks
     useEffect(() => {
         async function fetchAlbumData() {
-            const t = await getSpotifyToken();
-            setToken(t);
             try {
+                setError(null);
+                const t = await getSpotifyToken();
+                if (!t) throw new Error("Failed to retrieve Spotify token");
+                setToken(t);
                 const [albumRes, tracksRes] = await Promise.all([
                     axios.get(`https://api.spotify.com/v1/albums/${id}`, {
                         headers: { Authorization: `Bearer ${t}` }
@@ -75,15 +83,38 @@ export default function AlbumPage() {
 
             } catch (err) {
                 console.error("Error fetching album data:", err);
+                setError(err);
             }
         }
         fetchAlbumData();
     }, [id]);
 
-    if (!album) return <div className="flex items-center justify-center min-h-screen bg-black text-white">
-        <Loader className="animate-spin w-8 h-8 mr-3" />
-        <span className="text-lg">Loading Album...</span>
-    </div>;
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Failed to Load Content</h2>
+            <p className="text-gray-400 mb-6 text-center max-w-md">
+                We couldn't connect to the server. Please check your internet connection or try again later.
+            </p>
+            <button
+                onClick={() => window.location.reload()}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full transition duration-300 cursor-pointer"
+            >
+                Retry
+            </button>
+        </div>
+    );
+
+    if (!album) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+            <Loader className="animate-spin w-8 h-8 mb-4 text-purple-500" />
+            <span className="text-lg font-medium">Loading Album...</span>
+            {showWakingUpMessage && (
+                <span className="text-sm text-gray-400 mt-2 animate-pulse text-center max-w-xs">
+                    Waking up the backend api (this may take up to a minute)...
+                </span>
+            )}
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-blue-950 to-black p-6 text-white">

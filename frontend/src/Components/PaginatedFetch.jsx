@@ -1,7 +1,6 @@
-// PaginatedFetch.jsx
 import React, { useEffect, useState } from 'react';
-import Card from './Card';
 import PlaylistsOverview from './PlaylistOverview';
+import { API_BASE_URL } from '../lib/apiClient';
 
 const PaginatedFetch = ({ endpoint, limit = 10, type = 'album', onSelect }) => {
   const [items, setItems] = useState([]);
@@ -11,7 +10,7 @@ const PaginatedFetch = ({ endpoint, limit = 10, type = 'album', onSelect }) => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`https://music-recommender-api.onrender.com${endpoint}?limit=${limit}&offset=${offset}`, {
+      const res = await fetch(`${API_BASE_URL}${endpoint}?limit=${limit}&offset=${offset}`, {
         credentials: 'include',
       });
       const data = await res.json();

@@ -1,4 +1,5 @@
 import chipMap from "./ChipMap.js";
+import { API_BASE_URL } from "../lib/apiClient";
 
 /**
  * Gets a specified number of random keys from an object.
@@ -22,7 +23,7 @@ export async function getArrayOFRandomTracks() {
     selectedGenres.map(async (genreKey) => {
       const genreId = chipMap[genreKey];
       try {
-        const initRes = await fetch(`https://music-recommender-api.onrender.com/songs/${genreId}?limit=1`);
+        const initRes = await fetch(`${API_BASE_URL}/songs/${genreId}?limit=1`);
         if (!initRes.ok) throw new Error(`Initial fetch failed: ${initRes.statusText}`);
 
         const initData = await initRes.json();
@@ -33,7 +34,7 @@ export async function getArrayOFRandomTracks() {
         const maxOffset = Math.max(totalItems - 2, 0); // avoid empty fetch
         const offset = Math.floor(Math.random() * (maxOffset + 1));
 
-        const finalRes = await fetch(`https://music-recommender-api.onrender.com/songs/${genreId}?limit=2&offset=${offset}`);
+        const finalRes = await fetch(`${API_BASE_URL}/songs/${genreId}?limit=2&offset=${offset}`);
         if (!finalRes.ok) throw new Error(`Final fetch failed: ${finalRes.statusText}`);
 
         const finalData = await finalRes.json();

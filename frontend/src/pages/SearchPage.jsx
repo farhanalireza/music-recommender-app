@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import SearchComp from '../Components/Search';
-import Card from '../Components/Card';
 import Skeleton from 'react-loading-skeleton';
 import useDebouncedSearch from '../hooks/useDebouncedSearch';
 import fetchYouTubeData from '../hooks/useYoutubeSearch';

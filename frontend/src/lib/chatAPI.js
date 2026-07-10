@@ -1,7 +1,8 @@
-// lib/api.js
+import { API_BASE_URL } from "./apiClient";
+
 export async function getMoodSuggestions(message) {
   try {
-    const response = await fetch('https://music-recommender-api.onrender.com/chat', {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message }),

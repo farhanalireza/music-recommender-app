@@ -1,16 +1,31 @@
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../lib/apiClient";
 
-async function getSpotifyToken() {
-  try {
-    const response = await fetch(
-      "https://music-recommender-api.onrender.com/token"
-    );
-    const data = await response.json();
-    return data.access_token;
-  } catch (error) {
-    console.error("Failed to fetch Spotify token:", error);
-    return null;
+async function getSpotifyToken(retries = 25, delay = 3000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/token`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data && data.access_token) {
+        return data.access_token;
+      }
+      throw new Error("Invalid token response data");
+    } catch (error) {
+      console.warn(`Attempt ${attempt}/${retries} to fetch Spotify token failed:`, error.message || error);
+      if (attempt === retries) {
+        console.error("Max retries reached. Failed to fetch Spotify token:", error);
+        return null;
+      }
+      // Wait before retrying
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
   }
+  return null;
 }
 
 // Fetch Spotify Track Data

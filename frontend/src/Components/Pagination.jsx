@@ -1,6 +1,7 @@
 // src/components/Pagination.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../lib/apiClient';
 
 const Pagination = ({ currentPage, totalPages, prevUrl, nextUrl, getDataFromDB }) => (
   <div className="pagination-wrapper flex flex-col items-center gap-3 mt-4">
@@ -39,7 +40,7 @@ const Pagination = ({ currentPage, totalPages, prevUrl, nextUrl, getDataFromDB }
     <div className="flex flex-wrap justify-center gap-2 text-white m-5">
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
         const offset = (pageNum - 1) * 10;
-        const baseUrl = nextUrl || prevUrl || `https://music-recommender-api.onrender.com/songs?offset=${offset}&limit=10`;
+        const baseUrl = nextUrl || prevUrl || `${API_BASE_URL}/songs?offset=${offset}&limit=10`;
         const url = new URL(baseUrl);
         url.searchParams.set("offset", offset);
         url.searchParams.set("limit", 10);

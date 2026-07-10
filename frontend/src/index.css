@@ -222,8 +222,9 @@ body {
 
 #root {
   background-image: url("./assets/bg.png");
-  background-size: 100vw;
+  background-size: cover;
   background-position: center;
+  background-attachment: fixed;
 }
 
 @theme inline {

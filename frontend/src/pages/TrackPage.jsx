@@ -13,7 +13,16 @@ export default function TrackPage() {
     const { id } = useParams(); // Spotify track ID
     const [track, setTrack] = useState(null);
     const [saved, setSaved] = useState(false);
+    const [error, setError] = useState(null);
+    const [showWakingUpMessage, setShowWakingUpMessage] = useState(false);
     const { showPlayer } = usePlayer();
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowWakingUpMessage(true);
+        }, 1500);
+        return () => clearTimeout(timer);
+    }, []);
 
     function msToMmSs(ms) {
         // Convert milliseconds to total seconds
@@ -70,25 +79,46 @@ export default function TrackPage() {
 
     useEffect(() => {
         async function fetchTrackData() {
-            const token = await getSpotifyToken();
             try {
+                setError(null);
+                const token = await getSpotifyToken();
+                if (!token) throw new Error("Failed to retrieve Spotify token");
                 const res = await axios.get(`https://api.spotify.com/v1/tracks/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setTrack(res.data);
-                // console.log(res.data);
-
             } catch (err) {
                 console.error("Error fetching track data:", err);
+                setError(err);
             }
         }
         fetchTrackData();
     }, [id]);
 
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Failed to Load Content</h2>
+            <p className="text-gray-400 mb-6 text-center max-w-md">
+                We couldn't connect to the server. Please check your internet connection or try again later.
+            </p>
+            <button
+                onClick={() => window.location.reload()}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-full transition duration-300 cursor-pointer"
+            >
+                Retry
+            </button>
+        </div>
+    );
+
     if (!track) return (
-        <div className="flex items-center justify-center min-h-screen bg-black text-white">
-            <Loader className="animate-spin w-8 h-8 mr-3" />
-            <span className="text-lg">Loading Track...</span>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+            <Loader className="animate-spin w-8 h-8 mb-4 text-purple-500" />
+            <span className="text-lg font-medium">Loading Track...</span>
+            {showWakingUpMessage && (
+                <span className="text-sm text-gray-400 mt-2 animate-pulse text-center max-w-xs">
+                    Waking up the backend api (this may take up to a minute)...
+                </span>
+            )}
         </div>
     );
 

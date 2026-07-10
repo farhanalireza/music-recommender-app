@@ -1,6 +1,5 @@
 // PlaylistTracks.jsx
 import React from 'react';
-import Card from '../Components/Card';
 import { TrackCard } from './CardComponents/TracksCard';
 
 const PlaylistTracks = ({ tracks }) => {

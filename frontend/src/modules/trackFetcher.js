@@ -1,12 +1,12 @@
-// src/modules/trackFetcher.js
 import loadTracks from '../hooks/useTrackLoader';
+import { API_BASE_URL } from '../lib/apiClient';
 
 export async function fetchTracksFromDB({ keyOrUrl, limit, spotifyToken, setTrackData, setPaginationStates, setLoading }) {
   try {
     setLoading(true);
     let url = keyOrUrl.startsWith("http")
       ? keyOrUrl
-      : `https://music-recommender-api.onrender.com/songs/${keyOrUrl}?offset=0&limit=${limit}`;
+      : `${API_BASE_URL}/songs/${keyOrUrl}?offset=0&limit=${limit}`;
 
     const response = await fetch(url);
     const data = await response.json();

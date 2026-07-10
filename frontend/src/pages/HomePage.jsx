@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../App.css';
-import Card from "../Components/Card";
+import { API_BASE_URL } from "../lib/apiClient";
 import { TrackCard } from "../Components/CardComponents/TracksCard";
 import ChipSection from "../Components/ChipSection";
 import Skeleton from 'react-loading-skeleton';
@@ -32,7 +32,7 @@ function HomePage({ userName }) {
     useEffect(() => {
         const checkBackend = async () => {
             try {
-                const res = await fetch("https://music-recommender-api.onrender.com/health");
+                const res = await fetch(`${API_BASE_URL}/health`);
                 if (res.ok) {
                     setBackendStatus("Online");
                 } else {
@@ -102,12 +102,9 @@ function HomePage({ userName }) {
                 setLoading,
             })} />
 
-            {chipKey && <RandomTrackButton categoryBaseUrl={`https://music-recommender-api.onrender.com/songs/${chipKey}`} />}
+            {chipKey && <RandomTrackButton categoryBaseUrl={`${API_BASE_URL}/songs/${chipKey}`} />}
 
-            <div className="flex flex-col justify-center items-center text-white bg-gray-800 border-b-2 mb-4 p-3 text-justify">
-                <h1 className="text-4xl">GrooveShare: The universal way of sharing music</h1>
-                <h2>Coming Soon.....</h2>
-            </div>
+
 
             <div className="hidden sm:flex flex-row flex-wrap justify-center mb-5 gap-5">
                 {loading ? Array.from({ length: 20 }).map((_, i) => (

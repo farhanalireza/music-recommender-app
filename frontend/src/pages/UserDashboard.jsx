@@ -1,6 +1,7 @@
 // src/pages/UserDashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { API_BASE_URL } from '../lib/apiClient';
 import { Loader, Music, Heart, Disc, Users, User } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
@@ -17,11 +18,11 @@ export default function UserDashboard() {
 
   const fetchUserProfile = async () => {
     try {
-      await fetch('https://music-recommender-api.onrender.com/refresh_access_token', {
+      await fetch(`${API_BASE_URL}/refresh_access_token`, {
         credentials: 'include',
       });
 
-      const response = await fetch('https://music-recommender-api.onrender.com/me', {
+      const response = await fetch(`${API_BASE_URL}/me`, {
         credentials: 'include',
       });
 
@@ -55,7 +56,7 @@ export default function UserDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch('https://music-recommender-api.onrender.com/logout', { credentials: 'include' });
+      await fetch(`${API_BASE_URL}/logout`, { credentials: 'include' });
       window.location.reload();
     } catch (err) {
       console.error('[ERROR] Logout failed:', err);
@@ -212,7 +213,7 @@ export default function UserDashboard() {
             <div className='text-center space-y-5'>
               <p className='text-xl font-medium'>You're not logged in.</p>
               <button
-                onClick={() => window.open('https://music-recommender-api.onrender.com/login', '_self')}
+                onClick={() => window.open(`${API_BASE_URL}/login`, '_self')}
                 className='inline-flex items-center px-6 py-3 bg-green-500 text-white text-lg gap-3 hover:text-black hover:scale-110 active:scale-90 transition-all duration-200 rounded-2xl shadow-lg'
               >
                 <FontAwesomeIcon icon={faSpotify} />

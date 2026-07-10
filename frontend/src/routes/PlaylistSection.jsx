@@ -7,7 +7,8 @@ import SavedAlbums from '../Components/SavedAlbums';
 import LocallySavedSongs from '../Components/LocallySavedSongs';
 import { usePlayer } from '../contexts/PlayerContext';
 import FollowedArtist from '../Components/FollowedArtist';
-import { Loader2 } from 'lucide-react'; // You can use any spinner you prefer
+import { Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../lib/apiClient';
 
 
 const PlaylistSection = () => {
@@ -42,7 +43,7 @@ const PlaylistSection = () => {
 
 const checkAuth = async () => {
   try {
-    const res = await fetch('https://music-recommender-api.onrender.com/me', { credentials: 'include' });
+    const res = await fetch(`${API_BASE_URL}/me`, { credentials: 'include' });
 
     if (!res.ok) throw new Error('Not authenticated');
 
@@ -66,7 +67,7 @@ const checkAuth = async () => {
 
   const fetchPlaylists = async () => {
     try {
-      const res = await fetch('https://music-recommender-api.onrender.com/me', { credentials: 'include' });
+      const res = await fetch(`${API_BASE_URL}/me`, { credentials: 'include' });
       const data = await res.json();
       setPlaylists(data.playlists.items);
     } catch (err) {
@@ -76,7 +77,7 @@ const checkAuth = async () => {
 
   const fetchAlbums = async () => {
     try {
-      const res = await fetch('https://music-recommender-api.onrender.com/me/albums', { credentials: 'include' });
+      const res = await fetch(`${API_BASE_URL}/me/albums`, { credentials: 'include' });
       const data = await res.json();
       setAlbums(data.items);
     } catch (err) {
@@ -86,7 +87,7 @@ const checkAuth = async () => {
 
   const fetchArtists = async () => {
     try {
-      const res = await fetch('https://music-recommender-api.onrender.com/me/artists', { credentials: 'include' });
+      const res = await fetch(`${API_BASE_URL}/me/artists`, { credentials: 'include' });
       const data = await res.json();
       setArtists(data.artists.items);
     } catch (err) {
@@ -97,7 +98,7 @@ const checkAuth = async () => {
 
   const fetchPlaylistTracks = async (playlistId) => {
     try {
-      const tokenRes = await fetch('https://music-recommender-api.onrender.com/refresh_access_token', {
+      const tokenRes = await fetch(`${API_BASE_URL}/refresh_access_token`, {
         credentials: 'include'
       });
       const tokenData = await tokenRes.json();
@@ -122,7 +123,7 @@ const checkAuth = async () => {
 
   const fetchAlbumTracks = async (albumId) => {
     try {
-      const tokenRes = await fetch('https://music-recommender-api.onrender.com/refresh_access_token', {
+      const tokenRes = await fetch(`${API_BASE_URL}/refresh_access_token`, {
         credentials: 'include'
       });
       const tokenData = await tokenRes.json();

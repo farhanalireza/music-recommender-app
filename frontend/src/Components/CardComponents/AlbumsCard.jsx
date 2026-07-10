@@ -75,7 +75,7 @@ const toggleSave = () => {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={handleCardClick}
-      className="relative w-64 bg-gradient-to-br from-blue-900/80 to-gray/80 backdrop-blur-xl rounded-md overflow-hidden shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
+      className="relative w-64 bg-gradient-to-br from-blue-900/80 to-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
     >
       {/* Album Cover */}
       <div className="relative overflow-hidden rounded-xl p-5">
