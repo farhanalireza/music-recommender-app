@@ -5,7 +5,7 @@ import { getSpotifyToken } from "../hooks/useSpotify";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeft, Bookmark, BookmarkCheck, Loader, Play } from "lucide-react";
-import { SpotifyButton, YouTubeButton } from "../Components/MusicButtons";
+import { SpotifyButton, YouTubeButton, AppleMusicButton, SoundCloudButton, TidalButton } from "../Components/MusicButtons";
 import { TrackCard } from "../Components/CardComponents/TracksCard";
 import { AlbumCard } from "../Components/CardComponents/AlbumsCard";
 import { usePlayer } from "../contexts/PlayerContext";
@@ -190,11 +190,35 @@ export default function ArtistPage() {
                         ))}
                     </div>
 
-                    <div className="flex flex-col md:flex-row justify-center mt-5">
+                    <div className="flex flex-wrap justify-center gap-2 mt-5">
                         <SpotifyButton clickHandle={() => window.open(artist.external_urls.spotify, "_blank")} />
                         <YouTubeButton clickHandle={() =>
                             window.open(
                                 `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                                    artist.name
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <AppleMusicButton clickHandle={() =>
+                            window.open(
+                                `https://music.apple.com/us/search?term=${encodeURIComponent(
+                                    artist.name
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <SoundCloudButton clickHandle={() =>
+                            window.open(
+                                `https://soundcloud.com/search?q=${encodeURIComponent(
+                                    artist.name
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <TidalButton clickHandle={() =>
+                            window.open(
+                                `https://listen.tidal.com/search?q=${encodeURIComponent(
                                     artist.name
                                 )}`,
                                 "_blank"

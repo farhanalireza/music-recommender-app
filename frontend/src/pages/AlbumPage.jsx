@@ -5,7 +5,7 @@ import { getSpotifyToken } from "../hooks/useSpotify";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeft, Bookmark, BookmarkCheck, Loader } from "lucide-react";
-import { SpotifyButton, YouTubeButton } from "../Components/MusicButtons";
+import { SpotifyButton, YouTubeButton, AppleMusicButton, SoundCloudButton, TidalButton } from "../Components/MusicButtons";
 import { TrackCard } from "../Components/CardComponents/TracksCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { AlbumTrackCard } from "../Components/CardComponents/SmallTracksCard";
@@ -154,11 +154,35 @@ export default function AlbumPage() {
                         ))} • {album.release_date}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">{album.total_tracks} tracks</p>
-                    <div className="flex flex-col md:flex-row justify-center mt-5">
+                    <div className="flex flex-wrap justify-center gap-2 mt-5">
                         <SpotifyButton clickHandle={() => window.open(album.external_urls.spotify, "_blank")} />
                         <YouTubeButton clickHandle={() =>
                             window.open(
                                 `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                                    album.name + " " + album.artists.map(a => a.name).join(" ")
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <AppleMusicButton clickHandle={() =>
+                            window.open(
+                                `https://music.apple.com/us/search?term=${encodeURIComponent(
+                                    album.name + " " + album.artists.map(a => a.name).join(" ")
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <SoundCloudButton clickHandle={() =>
+                            window.open(
+                                `https://soundcloud.com/search?q=${encodeURIComponent(
+                                    album.name + " " + album.artists.map(a => a.name).join(" ")
+                                )}`,
+                                "_blank"
+                            )
+                        } />
+                        <TidalButton clickHandle={() =>
+                            window.open(
+                                `https://listen.tidal.com/search?q=${encodeURIComponent(
                                     album.name + " " + album.artists.map(a => a.name).join(" ")
                                 )}`,
                                 "_blank"

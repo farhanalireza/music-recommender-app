@@ -4,7 +4,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { getSpotifyToken } from "../hooks/useSpotify";
 import axios from "axios";
 import { ArrowLeft, Bookmark, BookmarkCheck, Loader, Play, SpaceIcon } from "lucide-react";
-import { SpotifyButton, YouTubeButton } from "../Components/MusicButtons";
+import { SpotifyButton, YouTubeButton, AppleMusicButton, SoundCloudButton, TidalButton } from "../Components/MusicButtons";
 import { usePlayer } from "../contexts/PlayerContext";
 import { ShareTrackComponent } from "../Components/CardComponents/ShareTrackComponent";
 
@@ -166,9 +166,12 @@ export default function TrackPage() {
                     </p>
                     <p>{msToMmSs(track.duration_ms)}</p>
                     <p className="text-sm text-gray-400 mt-1 cursor-default select-none">Popularity: {track.popularity}        {track.popularity >= 80 && <span title="Trending">🔥</span>}</p>
-                    <div className="flex flex-col md:flex-row justify-center mt-5">
+                    <div className="flex flex-wrap justify-center gap-2 mt-5">
                         <SpotifyButton clickHandle={() => window.open(track.external_urls.spotify, "_blank")} />
                         <YouTubeButton clickHandle={() => window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(track.name + ' ' + track.artists.map(a => a.name).join(' '))}`, "_blank")} />
+                        <AppleMusicButton clickHandle={() => window.open(`https://music.apple.com/us/search?term=${encodeURIComponent(track.name + ' ' + track.artists.map(a => a.name).join(' '))}`, "_blank")} />
+                        <SoundCloudButton clickHandle={() => window.open(`https://soundcloud.com/search?q=${encodeURIComponent(track.name + ' ' + track.artists.map(a => a.name).join(' '))}`, "_blank")} />
+                        <TidalButton clickHandle={() => window.open(`https://listen.tidal.com/search?q=${encodeURIComponent(track.name + ' ' + track.artists.map(a => a.name).join(' '))}`, "_blank")} />
                     </div>
                     <div className="mt-4 flex space-x-2">
                         <button
