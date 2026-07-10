@@ -5,6 +5,7 @@ import { Bookmark, BookmarkCheck, User } from "lucide-react";
 import { SpotifyButton, YouTubeButton } from "../MusicButtons";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ShareTrackComponent } from "./ShareTrackComponent";
 
 export const PlaylistCard = ({
   url,
@@ -88,6 +89,13 @@ export const PlaylistCard = ({
       {/* Controls */}
       <div className="absolute top-0 right-0 flex gap-2 items-center z-10 p-2">
         <PlayButton onPlay={handlePlayClick} />
+        <ShareTrackComponent
+          trackId={id}
+          title={title}
+          artist={owner || 'Playlist'}
+          url={url}
+          type="playlist"
+        />
         {saved ? (
           <BookmarkCheck
             stroke="white"

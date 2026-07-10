@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Bookmark, BookmarkCheck, Award, CirclePlay, EllipsisVertical, Share2 } from "lucide-react";
 import { SpotifyButton, YouTubeButton } from "../MusicButtons";
 import { useNavigate } from "react-router-dom";
+import ShareModal from "../ShareModal";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -32,6 +33,7 @@ export const TrackCard = ({
     const navigate = useNavigate();
     const { showPlayer } = usePlayer();
     const [saved, setSaved] = useState(false);
+    const [isShareOpen, setIsShareOpen] = useState(false);
 
     useEffect(() => {
         const savedSongs = JSON.parse(localStorage.getItem("savedSongs")) || [];
@@ -193,28 +195,10 @@ export const TrackCard = ({
                     </DropdownMenuItem>
                     
                     <DropdownMenuItem
-                        onSelect={(e) => {
-                            e.preventDefault();
-                            if (navigator.share) {
-                                navigator.share({
-                                    title: `${title} - ${artist.map(a => a.name).join(', ')}`,
-                                    text: `Check out this amazing track!`,
-                                    url: `https://music-recommender-app.vercel.app/track/${trackId || trackURI.split(':')[2]}`
-                                });
-                            } else {
-                                navigator.clipboard.writeText(`https://music-recommender-app.vercel.app/track/${trackId || trackURI.split(':')[2]}`);
-                            }
-                        }}
+                        onSelect={() => setIsShareOpen(true)}
                         className="cursor-pointer px-3 py-2.5 hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center gap-2"
                     >
-                                    <ShareTrackComponent
-                trackId={trackId}
-                title={title}
-                artist={artist}
-                url={url}
-                popularity={popularity}
-                explicit={explicit}
-            />Share
+                        <Share2 size={16} /> Share Card
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -241,6 +225,17 @@ export const TrackCard = ({
         <YouTubeButton clickHandle={() => handleClick(`https://www.youtube.com/results?search_query=${title + " " + artist.map((a, i) => a.name)}`)} />
     </div>
 </div>
+            <ShareModal
+                isOpen={isShareOpen}
+                onClose={() => setIsShareOpen(false)}
+                itemId={trackId || trackURI?.split(':')[2]}
+                title={title}
+                artist={artist}
+                imageUrl={url}
+                popularity={popularity}
+                explicit={explicit}
+                type="track"
+            />
         </motion.div>
     );
 };

@@ -4,6 +4,7 @@ import { Bookmark, BookmarkCheck, Calendar, Play } from "lucide-react";
 import { SpotifyButton, YouTubeButton } from "../MusicButtons";
 import { usePlayer } from "../../contexts/PlayerContext";
 import { useNavigate } from "react-router-dom";
+import { ShareTrackComponent } from "./ShareTrackComponent";
 
 export const AlbumCard = ({
   id,
@@ -97,12 +98,19 @@ const toggleSave = () => {
 
       {/* Content */}
       <div className="relative p-4 space-y-3">
-        {/* Save Icon */}
-        <div className="absolute top-4 right-4 z-10 cursor-pointer noskip">
+        {/* Save & Share Container */}
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-2 noskip">
+          <ShareTrackComponent
+            trackId={id}
+            title={title}
+            artist={artist}
+            url={url}
+            type="album"
+          />
           {saved ? (
-            <BookmarkCheck stroke="white" fill="green" onClick={handleSave} />
+            <BookmarkCheck stroke="white" fill="green" onClick={handleSave} className="cursor-pointer" />
           ) : (
-            <Bookmark stroke="white" onClick={handleSave} />
+            <Bookmark stroke="white" onClick={handleSave} className="cursor-pointer" />
           )}
         </div>
 

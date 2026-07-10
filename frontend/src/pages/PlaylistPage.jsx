@@ -7,6 +7,7 @@ import { Loader, ArrowLeft, Bookmark, BookmarkCheck, Play } from "lucide-react";
 import { usePlayer } from "../contexts/PlayerContext";
 import { AlbumTrackCard } from "../Components/CardComponents/SmallTracksCard";
 import { SpotifyButton, YouTubeButton } from "../Components/MusicButtons";
+import { ShareTrackComponent } from "../Components/CardComponents/ShareTrackComponent";
 
 export default function PlaylistPage() {
   const { id } = useParams();
@@ -104,11 +105,20 @@ export default function PlaylistPage() {
         <Link to="/" className="flex items-center gap-2 text-gray-300 hover:text-white text-sm">
           <ArrowLeft size={18} /> Back To Home
         </Link>
-        {saved ? (
-          <BookmarkCheck stroke="white" fill="green" onClick={toggleSave} className="cursor-pointer" />
-        ) : (
-          <Bookmark stroke="white" onClick={toggleSave} className="cursor-pointer" />
-        )}
+        <div className="flex items-center gap-3">
+          <ShareTrackComponent
+            trackId={playlist.id}
+            title={playlist.name}
+            artist={playlist.owner.display_name}
+            url={playlist.images[0]?.url}
+            type="playlist"
+          />
+          {saved ? (
+            <BookmarkCheck stroke="white" fill="green" onClick={toggleSave} className="cursor-pointer" />
+          ) : (
+            <Bookmark stroke="white" onClick={toggleSave} className="cursor-pointer" />
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 mb-8">
